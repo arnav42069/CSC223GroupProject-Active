@@ -35,7 +35,7 @@ public abstract class Stack<T> {
      */
     public abstract void push(T item) throws StackFullException; // <-- method
 
-    public abstract void pop() throws StackEmptyException; // <-- method heading
+    public abstract Faculty pop() throws StackEmptyException; // <-- method heading
 
     public abstract String peek(); // <-- method heading
 }

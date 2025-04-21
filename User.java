@@ -1,35 +1,23 @@
-public class User {
+import java.util.ArrayList;
+
+public class User extends Credentials {
     private String type;
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     private String name;
-    private int ID;
-    private String password;
+    private ArrayList<Class> classes;
 
-    public User(String name, int ID, String password) {
+
+//these lists just store username and passwords
+
+    private ArrayBasedList<Credentials> stuList;
+    private ArrayBasedStack<Credentials> facList;
+
+
+
+    public User(String name, String username, String password) {
+        super(username, password);
         this.name = name;
-        this.ID = ID;
-        this.password = password;
     }
 
-    public User(){
-        this.name = "";
-        this.ID = 0;
-        this.password = "";
-    }
-
-    public User(String name){
-        this.name = name;
-        this.ID = 0;
-        this.password = "";
-    }
 
     public String getName() {
         return name;
@@ -39,24 +27,39 @@ public class User {
         this.name = name;
     }
 
-    public int getID() {
-        return ID;
-    }
 
-    public void setID(int ID) {
-        this.ID = ID;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
+    public void setLogin(String password, String username){
         this.password = password;
+        this.username = username;
     }
 
-    public void setLogin(String password, int ID){
-        this.password = password;
-        this.ID = ID;
+    private boolean exists(String username, String password){
+        Credentials cred = new Credentials(username, password);
+        if (stuList.find(cred) || facList.find(cred)){
+            return true;
+        }
+        return false;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+// workin on this rn
+//    public ArrayBasedList<User> addStu(ArrayBasedList<Credentials> stuList) {
+//        ArrayBasedList<User> stuList = new ArrayBasedList<>(10);
+//        stuList.add();
+//
+//    }
+
+    public ArrayList<Class> getClasses() {
+        return classes;
+    }
+
+    public void setClasses(ArrayList<Class> classes) {
+        this.classes = classes;
     }
 }

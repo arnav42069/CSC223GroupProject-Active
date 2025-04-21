@@ -54,9 +54,10 @@ public class ArrayBasedStack<T> extends Stack<T>
         return topItem;
     }
     @Override
-    public void pop() throws StackEmptyException {
-
-        if(top > -1) { //check if the stack is not empty
+    public Faculty pop() throws StackEmptyException {
+        Faculty faculty = null;
+        if(top > -1) {
+            faculty = (Faculty) stack[top];   //check if the stack is not empty
             stack[top] = null;
             top--;
             size--;
@@ -65,6 +66,16 @@ public class ArrayBasedStack<T> extends Stack<T>
             throw new StackEmptyException("Pop attempted on an empty stack!");
         }
 
+        return faculty;
+    }
+    public boolean find(T item) {
+        boolean found = false;
+        for(int i = 0; i < size; i++) {
+            if(stack[i].equals(item)) {
+                found = true;
+            }
+        }
+        return found;
     }
 
     public int getTop() {
