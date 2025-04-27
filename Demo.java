@@ -6,6 +6,8 @@ public class Demo {
         Scanner sc = new Scanner(System.in);
         Admin admin = new Admin();
         ArrayBasedList<Student> studentList = new ArrayBasedList<>();
+        ArrayBasedList<Class> classList = new ArrayBasedList<>();
+
         //ArrayBasedList<Faculty> facultyList = new ArrayBasedList<>();  // No longer needed
         int choice = 0;
 
@@ -22,13 +24,13 @@ public class Demo {
 
             switch (choice) {
                 case 1:
-                    handleStudentLogin(sc, studentList);
+                    handleStudentLogin(sc, studentList, classList);
                     break;
                 case 2:
                     handleFacultyLogin(sc, admin.getfacultyStack());  // Changed to admin.getFacultyList()
                     break;
                 case 3:
-                    handleAdminLogin(sc, admin, studentList); // Removed facultyList
+                    handleAdminLogin(sc, admin, studentList, classList); // Removed facultyList
                     break;
                 case 4:
                     System.out.println("Exiting the system. Goodbye!");
@@ -41,7 +43,7 @@ public class Demo {
         sc.close();
     }
 
-    private static void handleStudentLogin(Scanner sc, ArrayBasedList<Student> studentList) {
+    private static void handleStudentLogin(Scanner sc, ArrayBasedList<Student> studentList, ArrayBasedList<Class> classList) {
         System.out.print("Enter your name: ");
         String name = sc.nextLine();
         System.out.print("Enter your birthdate (YYYY-MM-DD): ");
@@ -56,7 +58,7 @@ public class Demo {
             System.out.print("Enter password: ");
             String password = sc.nextLine();
             if (student.getCredentials().checkLogin(username, password)) {
-                studentMenu(sc, student);
+                studentMenu(sc, student, classList);
             } else {
                 System.out.println("Invalid credentials.");
             }
@@ -71,7 +73,7 @@ public class Demo {
             student.setStudentId(generateStudentId());
             studentList.add(student);
             System.out.println("Student registered successfully with ID: " + student.getStudentId());
-            studentMenu(sc, student);
+            studentMenu(sc, student, classList);
         }
     }
 
@@ -111,7 +113,7 @@ public class Demo {
 
     private static Faculty findFaculty(ArrayBasedStack<Faculty> facStack, String name) {  // Changed parameter type
         for (int i = 0; i < facStack.getSize(); i++) {  // Changed getSize() to size()
-            Faculty f = facStack.getStack()[i];
+            Faculty f = facStack.getStack(i);
             if (f.getName().equals(name)) {
                 return f;
             }
@@ -119,15 +121,15 @@ public class Demo {
         return null;
     }
 
-    private static void handleAdminLogin(Scanner sc, Admin admin, ArrayBasedList<Student> studentList) {  // Removed facultyList
+    private static void handleAdminLogin(Scanner sc, Admin admin, ArrayBasedList<Student> studentList, ArrayBasedList<Class> classList) {  // Removed facultyList
         if (admin.checkCredentials()) {
-            adminMenu(sc, admin, studentList); // Removed facultyList
+            adminMenu(sc, admin, studentList, classList); // Removed facultyList
         } else {
             System.out.println("Invalid admin credentials.");
         }
     }
 
-    private static void studentMenu(Scanner sc, Student student) {
+    private static void studentMenu(Scanner sc, Student student, ArrayBasedList<Class> classList) {
         int choice;
         do {
             System.out.println("\nStudent Menu:");
@@ -143,7 +145,7 @@ public class Demo {
                     student.viewEnrolledClasses();
                     break;
                 case 2:
-                    enrollInClass(sc, student, null); // Need classList
+                    enrollInClass(sc, student,classList  ); // Need classList
                     break;
                 case 3:
                     dropClass(sc, student);
@@ -187,7 +189,7 @@ public class Demo {
         } while (choice != 4);
     }
 
-    private static void adminMenu(Scanner sc, Admin admin, ArrayBasedList<Student> studentList) {  // Removed facultyList
+    private static void adminMenu(Scanner sc, Admin admin, ArrayBasedList<Student> studentList, ArrayBasedList<Class> classList) {  // Removed facultyList
         int choice;
         do {
             System.out.println("\nAdmin Menu:");
@@ -212,7 +214,7 @@ public class Demo {
                     removeCourse(sc, admin);
                     break;
                 case 3:
-                    scheduleClass(sc, admin);
+                    scheduleClass(sc, admin, classList);
                     break;
                 case 4:
                     cancelClass(sc, admin);
@@ -366,10 +368,18 @@ public class Demo {
         System.out.print("Enter course credits: ");
         int credits = sc.nextInt();
         sc.nextLine();
+
         Course course = new Course(abbreviation, number, name, credits);
         admin.addCourse(course);
         System.out.println("Course added.");
+
+        System.out.println("All courses:");
+        for (int i = 0; i < admin.getCourseList().getSize(); i++) {
+            Course c = admin.getCourseList().get(i);
+            System.out.println("- " + c.getCourseAbbreviation() + " " + c.getCourseNumber() + ": " + c.getCourseName());
+        }
     }
+
 
     private static void removeCourse(Scanner sc, Admin admin) {
         System.out.print("Enter the course abbreviation to remove: ");
@@ -392,7 +402,7 @@ public class Demo {
         }
     }
 
-    private static void scheduleClass(Scanner sc, Admin admin) {
+    private static void scheduleClass(Scanner sc, Admin admin, ArrayBasedList<Class> classList) {
         System.out.print("Enter course abbreviation: ");
         String abbreviation = sc.nextLine();
         System.out.print("Enter course number: ");
@@ -421,12 +431,84 @@ public class Demo {
     }
 
     private static void cancelClass(Scanner sc, Admin admin) {
-        System.out.println("Feature not fully implemented yet.");
+        System.out.print("Enter course abbreviation of the class to cancel: ");
+        String abbreviation = sc.nextLine();
+        System.out.print("Enter course number: ");
+        int number = sc.nextInt();
+        System.out.print("Enter section: ");
+        int section = sc.nextInt();
+        sc.nextLine();
+
+        Class classToCancel = null;
+        for (int i = 0; i < admin.getClassList().getSize(); i++) {
+            Class c = admin.getClassList().get(i);
+            if (c.getCourse().getCourseAbbreviation().equals(abbreviation) &&
+                    c.getCourse().getCourseNumber() == number &&
+                    c.getSection() == section) {
+                classToCancel = c;
+                break;
+            }
+        }
+
+        if (classToCancel != null) {
+            admin.cancelClass(classToCancel);  // Make sure Admin class has this method
+            System.out.println("Class cancelled.");
+        } else {
+            System.out.println("Class not found.");
+        }
     }
 
-    private static void assignFacultyToClass(Scanner sc, Admin admin, ArrayBasedStack<Faculty> facultyList) {  // Changed parameter
-        System.out.println("Feature not fully implemented yet.");
+
+    private static void assignFacultyToClass(Scanner sc, Admin admin, ArrayBasedStack<Faculty> facultyStack) {
+        if (admin.getClassList().getSize() == 0) {
+            System.out.println("No scheduled classes.");
+            return;
+        }
+
+        System.out.println("Scheduled Classes:");
+        for (int i = 0; i < admin.getClassList().getSize(); i++) {
+            Class c = admin.getClassList().get(i);
+            System.out.println(i + 1 + ". " + c.getCourse().getCourseAbbreviation() + " " +
+                    c.getCourse().getCourseNumber() + " - Section " + c.getSection());
+        }
+
+        System.out.print("Enter the number of the class to assign a faculty to: ");
+        int classChoice = sc.nextInt();
+        sc.nextLine();
+
+        if (classChoice < 1 || classChoice > admin.getClassList().getSize()) {
+            System.out.println("Invalid class choice.");
+            return;
+        }
+
+        Class selectedClass = admin.getClassList().get(classChoice - 1);
+
+        if (facultyStack.getSize() == 0) {
+            System.out.println("No faculty available.");
+            return;
+        }
+
+        System.out.println("Available Faculty:");
+        for (int i = 0; i < facultyStack.getSize(); i++) {
+            Faculty f = facultyStack.getStack(i);
+            System.out.println(i + 1 + ". " + f.getName());
+        }
+
+        System.out.print("Enter the number of the faculty to assign: ");
+        int facultyChoice = sc.nextInt();
+        sc.nextLine();
+
+        if (facultyChoice < 1 || facultyChoice > facultyStack.getSize()) {
+            System.out.println("Invalid faculty choice.");
+            return;
+        }
+
+        Faculty selectedFaculty = facultyStack.getStack(facultyChoice - 1);
+        selectedFaculty.assignClass(selectedClass);
+        selectedClass.setFaculty(selectedFaculty);
+        System.out.println("Faculty assigned to class.");
     }
+
 
     private static void hireFaculty(Scanner sc, Admin admin) {  // Removed facultyList parameter
         System.out.print("Enter faculty name: ");
@@ -467,7 +549,7 @@ public class Demo {
             System.out.println("No faculty hired.");
         } else {
             for (int i = 0; i < facultyStack.getSize(); i++) {
-                Faculty faculty = facultyStack.getStack()[i];  // Access element using getStack()[i]
+                Faculty faculty = facultyStack.getStack(i);  // Access element using getStack()[i]
                 System.out.println("- " + faculty.getFacultyId() + " - " + faculty.getName());
             }
         }

@@ -86,7 +86,10 @@ public class ArrayBasedStack<T> extends Stack<T>
         this.top = top;
     }
 
-    public T[] getStack() {
+    public T getStack(int i) {
+        return stack[i];
+    }
+    public T[] getFullStack() {
         return stack;
     }
 

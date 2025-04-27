@@ -136,7 +136,7 @@ public class ArrayBasedList<E> implements ListInterface<E> {
 
 	@Override
 	public int getSize() {
-		return locate((E) this) + 1;
+		return numberOfItems;
 	}
 
 	/**

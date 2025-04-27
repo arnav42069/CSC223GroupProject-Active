@@ -6,7 +6,7 @@ public class Class {
 
     private String time;
 
-    private Faculty instructor;
+    private Faculty faculty;
 
     private int capacity;
 
@@ -28,7 +28,7 @@ public class Class {
 
         this.waitlist = new ArrayBasedList<>();
 
-        this.instructor = null; // Initially no instructor
+        this.faculty = null; // Initially no faculty
 
     }
 
@@ -50,20 +50,18 @@ public class Class {
 
     }
 
-    public Faculty getInstructor() {
+    public Faculty getfaculty() {
 
-        return instructor;
+        return faculty;
 
     }
 
-    public void setInstructor(Faculty instructor) {
-
-        this.instructor = instructor;
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
 
     }
 
     public int getCapacity() {
-
         return capacity;
 
     }
@@ -129,4 +127,8 @@ public class Class {
         return sectionNumber;
     }
 
+
+    public Faculty getFaculty() {
+    return faculty;
+    }
 }

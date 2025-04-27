@@ -103,4 +103,9 @@ public class Faculty {
             }
         }
     }
+
+//    public void addAssignedClass(Class selectedClass) {
+//        this.addAssignedClass(selectedClass);
+//        selectedClass.setFaculty(this);
+//    }
 }

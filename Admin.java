@@ -1,18 +1,18 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Admin {
 
+
     private final Credentials adminLogin = new Credentials("admin", "admin");
-
     private ListInterface<Class> classList = new ArrayBasedList<>();
-
     private ListInterface<Course> courseList = new ArrayBasedList<>();
-
     private ArrayBasedStack<Faculty> facultyStack = new ArrayBasedStack<>();
 
     public ArrayBasedStack<Faculty> getFacultyStack() {
         return facultyStack;
     }
+
     public boolean checkCredentials() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter admin username: ");
@@ -60,7 +60,7 @@ public class Admin {
             return;
         }
 
-        classToAssign.setInstructor(faculty);
+        classToAssign.setFaculty(faculty);
         faculty.assignClass(classToAssign);
     }
 
@@ -70,13 +70,16 @@ public class Admin {
         facultyStack.push(faculty);
     }
 
+
+
+
     public void fireFaculty() {
         try {
             Faculty facultyToRemove = facultyStack.pop(); // Pop from the stack
             // Unassign faculty from all classes
             for (int i = 0; i < classList.getSize(); i++) {
                 Class c = classList.get(i);
-                if (c.getInstructor() != null && c.getInstructor().equals(facultyToRemove)) {
+                if (c.getfaculty() != null && c.getfaculty().equals(facultyToRemove)) {
                     unassignFacultyFromClass(c);
                 }
             }
@@ -111,10 +114,10 @@ public class Admin {
     }
 
     private void unassignFacultyFromClass(Class classToUnassign) {
-        Faculty currentInstructor = classToUnassign.getInstructor();
-        if (currentInstructor != null) {
-            currentInstructor.removeClass(classToUnassign);
-            classToUnassign.setInstructor(null);
+        Faculty currentFaculty = classToUnassign.getFaculty();
+        if (currentFaculty != null) {
+            currentFaculty.removeClass(classToUnassign);
+            classToUnassign.setFaculty(null);
         }
     }
 
@@ -130,7 +133,6 @@ public class Admin {
             classToDrop.getWaitlist().remove(classToDrop.getWaitlist().get(0));
         }
     }
-
 
 
     private String generateFacultyId() {
