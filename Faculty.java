@@ -4,8 +4,23 @@ public class Faculty {
     private String name;
     private Credentials credentials;
     private ListInterface<Class> assignedClasses;
+    private boolean fulltime;
 
-    public Faculty(String name) { // Modified constructor
+    public boolean isFulltime() {
+        return fulltime;
+    }
+
+    public void setFulltime(boolean fulltime) {
+        this.fulltime = fulltime;
+    }
+
+    public void setAssignedClasses(ListInterface<Class> assignedClasses) {
+        this.assignedClasses.add((Class) assignedClasses);
+    }
+
+    public Faculty(String name, boolean fulltime, Credentials c) { // Modified constructor
+        this.credentials = c;
+        this.fulltime = fulltime;
         this.name = name;
         this.assignedClasses = new ArrayBasedList<>();
     }
