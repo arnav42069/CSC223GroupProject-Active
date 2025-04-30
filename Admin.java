@@ -66,6 +66,7 @@ public class Admin {
 
     public void hireFaculty(Faculty faculty) {
         // Generate a faculty ID
+
         faculty.setFacultyId(generateFacultyId());
         facultyStack.push(faculty);
     }
