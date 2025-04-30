@@ -3,6 +3,7 @@ import java.util.Scanner;
 public class Demo {
 
     public static void main(String[] args) {
+
         Scanner sc = new Scanner(System.in);
         Admin admin = new Admin();
         ArrayBasedList<Student> studentList = new ArrayBasedList<>();
@@ -12,6 +13,7 @@ public class Demo {
         int choice = 0;
 
         do {
+            classList = (ArrayBasedList<Class>) admin.getClassList();
             System.out.println("Welcome to the Class Registration System!");
             System.out.println("Please select your user type:");
             System.out.println("1. Student");
@@ -145,7 +147,7 @@ public class Demo {
                     student.viewEnrolledClasses();
                     break;
                 case 2:
-                    enrollInClass(sc, student,classList  ); // Need classList
+                    enrollInClass(sc, student,classList); // Need classList
                     break;
                 case 3:
                     dropClass(sc, student);
@@ -513,12 +515,17 @@ public class Demo {
     private static void hireFaculty(Scanner sc, Admin admin) {  // Removed facultyList parameter
         System.out.print("Enter faculty name: ");
         String name = sc.nextLine();
-        Faculty faculty = new Faculty(name);
+
         System.out.print("Enter faculty username: ");
         String username = sc.nextLine();
         System.out.print("Enter faculty password: ");
         String password = sc.nextLine();
+
         Credentials credentials = new Credentials(username, password);
+        System.out.print("Is faculty fulltime?: 1. for yes or 2. for no: ");
+        int facultyChoice = sc.nextInt();
+        boolean facultyFulltime = facultyChoice == 1;
+        Faculty faculty = new Faculty(name, facultyFulltime, credentials);
         faculty.setCredentials(credentials);
         admin.hireFaculty(faculty);
         System.out.println("Faculty hired.");
